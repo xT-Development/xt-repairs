@@ -2,7 +2,6 @@ Config = {}
 
 -- Debug Configs --
 Config.Debug = true
-Config.DebugPoly = false
 
 -- General Configs --
 Config.Fuel = 'cdn-fuel' -- Fuel resource
