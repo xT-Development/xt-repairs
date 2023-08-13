@@ -3,6 +3,9 @@ local RepairPoints = {}
 local shown = false
 local Blips = {}
 
+local lib = lib
+local IsControlJustReleased = IsControlJustReleased
+
 local function SetupRepairPoints()
     for x = 1, #Config.Locations do
         local Info = Config.Locations[x]
@@ -17,25 +20,36 @@ local function SetupRepairPoints()
         })
 
         function RepairZone:onExit()
-            if shown then lib.hideTextUI() shown = false end
+            if shown then 
+                lib.hideTextUI() 
+                shown = false 
+            end
         end
 
         function RepairZone:nearby()
-            if self.currentDistance <= Info.point.radius then
+            if not xTc.IsPedDriving() then
+                if shown then
+                    lib.hideTextUI() 
+                    shown = false
+                end
+                return
+            end
 
-                if not shown and xTc.IsPedDriving() then
+            if self.currentDistance <= Info.point.radius then
+                if not shown then
                     lib.showTextUI('[E] - Repair Menu', {
                         position = "left-center",
                         icon = 'fas fa-gears',
                     })
                     shown = true
-                elseif shown and not xTc.IsPedDriving() then
-                    lib.hideTextUI() shown = false
                 end
 
                 if IsControlJustReleased(0, 38) then xTc.RepairMenu(x) end
             else
-                if shown then lib.hideTextUI() shown = false end
+                if shown then 
+                    lib.hideTextUI() 
+                    shown = false 
+                end
             end
         end
         RepairPoints[#RepairPoints+1] = RepairZone
