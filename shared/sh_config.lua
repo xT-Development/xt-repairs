@@ -7,6 +7,7 @@ Config.Debug = true
 Config.Fuel = 'cdn-fuel' -- Fuel resource
 Config.MinimumMechanics = 0 -- If Mechanic count is over this, required to contact mechanic
 Config.RenewedBanking = true -- Renewed Banking (If false, uses qb-management)
+Config.DefaultMechJob = 'mechanic' -- Default job check for locations that are not owned
 
 -- Zone Configs --
 Config.Locations = {
