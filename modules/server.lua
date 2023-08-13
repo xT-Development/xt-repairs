@@ -20,6 +20,10 @@ end
 
 function xTs.BusyState(ID, BOOL)
     if Config.Locations[ID].isBusy == BOOL then return end
+    local pCoords = GetEntityCoords(GetPlayerPed(source))
+    local repairCoords = Config.Locations[ID].point.coords
+    local dist = #(repairCoords - pCoords)
+    if dist > Config.Locations[ID].point.radius then return end
     Config.Locations[ID].isBusy = BOOL
 end
 
