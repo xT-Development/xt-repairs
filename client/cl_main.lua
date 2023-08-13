@@ -1,4 +1,5 @@
 local xTc = require('modules.client')
+local RepairPoints = {}
 local shown = false
 local Blips = {}
 
@@ -37,6 +38,7 @@ local function SetupRepairPoints()
                 if shown then lib.hideTextUI() shown = false end
             end
         end
+        RepairPoints[#RepairPoints+1] = RepairZone
     end
 end
 
@@ -45,6 +47,9 @@ local function CleanupRepairs()
         if DoesBlipExist(Blips[x]) and Config.Locations[x].blip.enable then
             RemoveBlip(Blips[x])
         end
+    end
+    for x = 1, #RepairPoints do
+        RepairPoints[x]:remove()
     end
 end
 
