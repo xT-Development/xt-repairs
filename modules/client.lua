@@ -34,99 +34,57 @@ function xTc.RepairMenu(ID)
         if vehicleCheck then
             local vehicle = GetVehiclePedIsIn(cache.ped)
             local isOwned = Config.Locations[ID].business.isOwned
+            local mechanics
+
             if isOwned then
                 local business = Config.Locations[ID].business.job
-                local mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, business)
-                if mechanics <= Config.MinimumMechanics then
-                    lib.registerContext({
-                        id = 'repair_menu',
-                        title = 'Vehicle Repair',
-                        options = {
-                            {
-                                title = 'Repair Engine',
-                                icon = 'fas fa-gears',
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'internals')
-                                    local engine = GetVehicleEngineHealth(vehicle)
-                                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'internals') end
-                                end
-                            },
-                            {
-                                title = 'Repair Body',
-                                icon = 'fas fa-gears',
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'externals')
-                                    local body = GetVehicleBodyHealth(vehicle)
-                                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'externals') end
-                                end
-                            },
-                            {
-                                title = 'Repair All',
-                                icon = 'fas fa-gears',
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'all')
-                                    local body = GetVehicleBodyHealth(vehicle)
-                                    local engine = GetVehicleEngineHealth(vehicle)
-                                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
-                                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'all') end
-                                end
-                            },
-                        }
-                    })
-                    lib.showContext('repair_menu')
-                else
-                    QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error')
-                end
+                mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, business)
             else
-                local mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, 'mechanic')
-                if mechanics <= Config.MinimumMechanics then
-                    lib.registerContext({
-                        id = 'repair_menu',
-                        title = 'Vehicle Repair',
-                        options = {
-                            {
-                                title = 'Repair Engine',
-                                icon = 'fas fa-gears',
-                                progress = math.floor((GetVehicleEngineHealth(vehicle))/10),
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'internals')
-                                    local engine = GetVehicleEngineHealth(vehicle)
-                                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'internals') end
-                                end
-                            },
-                            {
-                                title = 'Repair Body',
-                                icon = 'fas fa-gears',
-                                progress = math.floor((GetVehicleBodyHealth(vehicle))/10),
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'externals')
-                                    local body = GetVehicleBodyHealth(vehicle)
-                                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'externals') end
-                                end
-                            },
-                            {
-                                title = 'Repair All',
-                                icon = 'fas fa-gears',
-                                onSelect = function()
-                                    local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'all')
-                                    local body = GetVehicleBodyHealth(vehicle)
-                                    local engine = GetVehicleEngineHealth(vehicle)
-                                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
-                                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
-                                    if hasFunds then xTc.Repair(ID, 'all') end
-                                end
-                            },
-                        }
-                    })
-                    lib.showContext('repair_menu')
-                else
-                    QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error')
-                end
+                mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, 'mechanic')
+            end
+
+            if mechanics <= Config.MinimumMechanics then
+                lib.registerContext({
+                    id = 'repair_menu',
+                    title = 'Vehicle Repair',
+                    options = {
+                        {
+                            title = 'Repair Engine',
+                            icon = 'fas fa-gears',
+                            onSelect = function()
+                                local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'internals')
+                                local engine = GetVehicleEngineHealth(vehicle)
+                                if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
+                                if hasFunds then xTc.Repair(ID, 'internals') end
+                            end
+                        },
+                        {
+                            title = 'Repair Body',
+                            icon = 'fas fa-gears',
+                            onSelect = function()
+                                local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'externals')
+                                local body = GetVehicleBodyHealth(vehicle)
+                                if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
+                                if hasFunds then xTc.Repair(ID, 'externals') end
+                            end
+                        },
+                        {
+                            title = 'Repair All',
+                            icon = 'fas fa-gears',
+                            onSelect = function()
+                                local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'all')
+                                local body = GetVehicleBodyHealth(vehicle)
+                                local engine = GetVehicleEngineHealth(vehicle)
+                                if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
+                                if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
+                                if hasFunds then xTc.Repair(ID, 'all') end
+                            end
+                        },
+                    }
+                })
+                lib.showContext('repair_menu')
+            else
+                QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error')
             end
         else
             QBCore.Functions.Notify('You can\'t repair this vehicle class at this location!', 'error')
