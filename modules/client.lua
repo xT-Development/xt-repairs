@@ -183,12 +183,6 @@ function xTc.RepairAll()
 end
 
 function xTc.Blip(text, coords, icon, scale, color)
-    if text == nil then Utils.Debug('Create Blip Error', 'Missing Blip Text!') return end
-    if coords == nil then Utils.Debug('Create Blip Error', 'Missing Blip Coordinates!') return end
-    if icon == nil then Utils.Debug('Create Blip Error', 'Missing Blip Icon!') return end
-    if scale == nil then Utils.Debug('Create Blip Error', 'Missing Blip Scale!') return end
-    if color == nil then Utils.Debug('Create Blip Error', 'Missing Blip Color!') return end
-
     local blipID = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blipID, icon)
     SetBlipScale(blipID, scale)
