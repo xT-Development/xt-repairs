@@ -1,4 +1,35 @@
+local Wheels = {
+    ['4'] = {
+        { id = 0, name = 'Driver Front'},
+        { id = 4, name = 'Driver Rear'},
+        { id = 1, name = 'Passenger Front'},
+        { id = 5, name = 'Passenger Rear'}
+    },
+    ['6'] = {
+        { id = 0, name = 'Driver Front'},
+        { id = 2, name = 'Driver Middle'},
+        { id = 4, name = 'Driver Rear'},
+        { id = 1, name = 'Passenger Front'},
+        { id = 3, name = 'Passenger Middle'},
+        { id = 5, name = 'Passenger Rear'}
+    }
+}
+
 local xTc = {}
+
+-- Play Emote --
+function xTc.Emote(emote)
+    if not exports.scully_emotemenu:playEmoteByCommand(emote) then
+        TriggerEvent('animations:client:EmoteCommandStart', {emote})
+    end
+end
+
+-- End Emote --
+function xTc.EndEmote()
+    if not exports.scully_emotemenu:cancelEmote() then
+        TriggerEvent('animations:client:EmoteCommandStart', {'c'})
+    end
+end
 
 function xTc.IsPedDriving()
     local ped = cache.ped
@@ -144,6 +175,65 @@ function xTc.Blip(text, coords, icon, scale, color)
     AddTextComponentString(text)
     EndTextCommandSetBlipName(blipID)
     return blipID
+end
+
+function xTc.GetVehTemp(VEH)
+    local temp
+    if Config.Fahrenheit then
+        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH) * 1.8) + 32)..'°F'
+    else
+        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH)))..'°C'
+    end
+    return temp
+end
+
+function xTc.GetVehicleWheels(VEH)
+    local wheelCount = GetVehicleNumberOfWheels(VEH)
+    local wheelsInfo = ''
+    if wheelCount == 4 then
+        for x = 1, #Wheels['4'] do
+            local wHealth
+            if IsVehicleTyreBurst(VEH, Wheels['4'][x].id) then wHealth = '🔴' else wHealth = '🟢' end
+            wheelsInfo = wheelsInfo..Wheels['4'][x].name..': '..wHealth..'  \n'
+        end
+    elseif wheelCount == 6 then
+        for x = 1, #Wheels['6'] do
+            local wHealth
+            if IsVehicleTyreBurst(VEH, Wheels['6'][x].id) then wHealth = '🔴' else wHealth = '🟢' end
+            wheelsInfo = wheelsInfo..Wheels['6'][x].name..': '..wHealth..'  \n'
+        end
+    end
+    return wheelsInfo
+end
+
+function xTc.GlobalMechInfo()
+    exports.ox_target:addGlobalVehicle({
+        {
+            name = 'mechInfo',
+            label = 'Vehicle Info',
+            icon = 'fas fa-info',
+            groups = Config.MechanicJobs,
+            onSelect = function(data)
+                TriggerEvent('xt-mechinfo:client:Menu', data.entity)
+            end
+        }
+    })
+end
+
+function xTc.RemoveGlobalMechInfo()
+    exports.ox_target:removeGlobalVehicle('mechInfo')
+end
+
+function xTc.ProgressColor(PROGRESS)
+    if PROGRESS >= 75 then
+        return 'green'
+    elseif PROGRESS < 75 and PROGRESS >= 50 then
+        return 'yellow'
+    elseif PROGRESS < 50 and PROGRESS >= 25 then
+        return 'orange'
+    elseif PROGRESS < 25 and PROGRESS >= 0 then
+        return 'red'
+    end
 end
 
 return xTc

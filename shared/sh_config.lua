@@ -9,6 +9,11 @@ Config.MinimumMechanics = 0 -- If Mechanic count is over this, required to conta
 Config.RenewedBanking = true -- Renewed Banking (If false, uses qb-management)
 Config.DefaultMechJob = 'mechanic' -- Default job check for locations that are not owned
 
+-- Vehicle Status Menu Config --
+Config.Fahrenheit = true -- Use farenheit for engine temp
+Config.MechanicJobs = { 'mechanic' } -- Used for vehicle status menu
+Config.ScanVehicleLength = 5 -- Seconds it takes to scan the vehicle
+
 -- Zone Configs --
 Config.Locations = {
     { -- Bennys

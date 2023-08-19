@@ -20,16 +20,16 @@ local function SetupRepairPoints()
         })
 
         function RepairZone:onExit()
-            if shown then 
-                lib.hideTextUI() 
-                shown = false 
+            if shown then
+                lib.hideTextUI()
+                shown = false
             end
         end
 
         function RepairZone:nearby()
             if not xTc.IsPedDriving() then
                 if shown then
-                    lib.hideTextUI() 
+                    lib.hideTextUI()
                     shown = false
                 end
                 return
@@ -46,9 +46,9 @@ local function SetupRepairPoints()
 
                 if IsControlJustReleased(0, 38) then xTc.RepairMenu(x) end
             else
-                if shown then 
-                    lib.hideTextUI() 
-                    shown = false 
+                if shown then
+                    lib.hideTextUI()
+                    shown = false
                 end
             end
         end
@@ -67,8 +67,18 @@ local function CleanupRepairs()
     end
 end
 
+local function playerLoad()
+    xTc.GlobalMechInfo()
+    SetupRepairPoints()
+end
+
+local function playerUnload()
+    xTc.RemoveGlobalMechInfo()
+    CleanupRepairs()
+end
+
 -- Resource / Player Stuff --
-AddEventHandler('onResourceStart', function(resource) if resource == GetCurrentResourceName() then SetupRepairPoints() end end)
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function() SetupRepairPoints() end)
-AddEventHandler('onResourceStop', function(resource) if resource == GetCurrentResourceName() then CleanupRepairs() end end)
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function() CleanupRepairs() end)
+AddEventHandler('onResourceStart', function(resource) if resource == GetCurrentResourceName() then playerLoad() end end)
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function() playerLoad() end)
+AddEventHandler('onResourceStop', function(resource) if resource == GetCurrentResourceName() then playerUnload() end end)
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function() playerUnload() end)
