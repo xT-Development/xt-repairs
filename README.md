@@ -20,6 +20,7 @@
 - [qb-core](https://github.com/qbcore-framework/qb-core)
 - [ox_lib](https://github.com/overextended/ox_lib/releases)
 - [Renewed-Banking](https://github.com/Renewed-Scripts/Renewed-Banking) OR [qb-management](https://github.com/Renewed-Scripts/Renewed-Banking)
+- Optional: [xt-slashtires](https://xtdev.tebex.io/package/5872186)
 
 # Preview:
 https://www.youtube.com/watch?v=p4ORVkKAwAw

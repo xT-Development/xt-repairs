@@ -138,6 +138,9 @@ function xTc.Repair(ID, TYPE)
                 SetVehicleBodyHealth(vehicle, 1000.0)
                 SetVehicleFixed(vehicle)
                 SetVehicleEngineHealth(vehicle, currentEngine)
+                if Config.XTSlashTires then 
+                    exports['xt-slashtires']:FixAllTires(vehicle) 
+                end
             elseif TYPE == 'internals' then
                 SetVehicleEngineHealth(vehicle, 1000.0)
             elseif TYPE == 'all' then
@@ -161,6 +164,9 @@ function xTc.RepairAll()
         SetVehicleUndriveable(vehicle, false)
         WashDecalsFromVehicle(vehicle, 1.0)
         SetVehicleFixed(vehicle)
+        if Config.XTSlashTires then 
+            exports['xt-slashtires']:FixAllTires(vehicle) 
+        end
     end
 end
 

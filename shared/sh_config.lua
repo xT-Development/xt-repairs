@@ -8,6 +8,7 @@ Config.Fuel = 'cdn-fuel' -- Fuel resource
 Config.MinimumMechanics = 0 -- If Mechanic count is over this, required to contact mechanic
 Config.RenewedBanking = true -- Renewed Banking (If false, uses qb-management)
 Config.DefaultMechJob = 'mechanic' -- Default job check for locations that are not owned
+Config.XTSlashTires = false -- Enable if using xt-slashtires (Requires exports to sync the tires properly)
 
 -- Vehicle Status Menu Config --
 Config.Fahrenheit = true -- Use farenheit for engine temp
