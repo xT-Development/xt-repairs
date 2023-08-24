@@ -1,3 +1,5 @@
+local scully = GetResourceState('scully_emotemenu')
+local rpemotes = GetResourceState('rpemotes')
 local Wheels = {
     ['4'] = {
         { id = 0, name = 'Driver Front'},
@@ -19,14 +21,20 @@ local xTc = {}
 
 -- Play Emote --
 function xTc.Emote(emote)
-    if not exports.scully_emotemenu:playEmoteByCommand(emote) then
+    if scully == 'started' then
+        exports.scully_emotemenu:playEmoteByCommand(emote)
+    end
+    if rpemotes == 'started' then
         TriggerEvent('animations:client:EmoteCommandStart', {emote})
     end
 end
 
 -- End Emote --
 function xTc.EndEmote()
-    if not exports.scully_emotemenu:cancelEmote() then
+    if scully == 'started' then
+        exports.scully_emotemenu:cancelEmote()
+    end
+    if rpemotes == 'started' then
         TriggerEvent('animations:client:EmoteCommandStart', {'c'})
     end
 end
@@ -138,8 +146,8 @@ function xTc.Repair(ID, TYPE)
                 SetVehicleBodyHealth(vehicle, 1000.0)
                 SetVehicleFixed(vehicle)
                 SetVehicleEngineHealth(vehicle, currentEngine)
-                if Config.XTSlashTires then 
-                    exports['xt-slashtires']:FixAllTires(vehicle) 
+                if Config.XTSlashTires then
+                    exports['xt-slashtires']:FixAllTires(vehicle)
                 end
             elseif TYPE == 'internals' then
                 SetVehicleEngineHealth(vehicle, 1000.0)
@@ -164,8 +172,8 @@ function xTc.RepairAll()
         SetVehicleUndriveable(vehicle, false)
         WashDecalsFromVehicle(vehicle, 1.0)
         SetVehicleFixed(vehicle)
-        if Config.XTSlashTires then 
-            exports['xt-slashtires']:FixAllTires(vehicle) 
+        if Config.XTSlashTires then
+            exports['xt-slashtires']:FixAllTires(vehicle)
         end
     end
 end

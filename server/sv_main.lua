@@ -16,8 +16,9 @@ lib.callback.register('xt-repairs:server:HasFunds', function(source, ID, TYPE)
     local Player = QBCore.Functions.GetPlayer(src)
     local money = Player.Functions.GetMoney('bank')
     local callback = false
+    local total = Config.Locations[ID].cost[TYPE]
 
-    if money >= Config.Locations[ID].cost[TYPE] then
+    if money >= total then
         callback = true
     else
         QBCore.Functions.Notify(src, 'You don\'t have enough funds for the repair!', 'error')
