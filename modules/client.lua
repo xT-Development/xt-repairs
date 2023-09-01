@@ -193,12 +193,15 @@ end
 
 function xTc.GetVehTemp(VEH)
     local temp
+    local type
     if Config.Fahrenheit then
-        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH) * 1.8) + 32)..'°F'
+        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH) * 1.8) + 32)
+        type = '°F'
     else
-        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH)))..'°C'
+        temp = tostring(math.ceil(GetVehicleEngineTemperature(VEH)))
+        type = '°C'
     end
-    return temp
+    return temp, type
 end
 
 function xTc.GetVehicleWheels(VEH)
@@ -238,7 +241,7 @@ function xTc.RemoveGlobalMechInfo()
     exports.ox_target:removeGlobalVehicle('mechInfo')
 end
 
-function xTc.ProgressColor(PROGRESS)
+function xTc.VehicleHealthColor(PROGRESS)
     if PROGRESS >= 75 then
         return 'green'
     elseif PROGRESS < 75 and PROGRESS >= 50 then
@@ -247,6 +250,18 @@ function xTc.ProgressColor(PROGRESS)
         return 'orange'
     elseif PROGRESS < 25 and PROGRESS >= 0 then
         return 'red'
+    end
+end
+
+function xTc.VehicleTempColor(PROGRESS)
+    if PROGRESS >= 90 then
+        return 'red'
+    elseif PROGRESS < 90 and PROGRESS >= 70 then
+        return 'orange'
+    elseif PROGRESS < 70 and PROGRESS >= 40 then
+        return 'yellow'
+    elseif PROGRESS < 40 and PROGRESS >= 0 then
+        return 'green'
     end
 end
 
