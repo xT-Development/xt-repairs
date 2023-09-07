@@ -57,7 +57,7 @@ end
 function xTc.CheckVehicle(ID)
     local callback = false
     local vehicle = cache.vehicle
-    for x = 1, #Config.Locations[ID].allowedClasses do
+    for _, x in ipairs(Config.Locations[ID].allowedClasses) do
         if GetVehicleClass(vehicle) == x then
             callback = true
             break
