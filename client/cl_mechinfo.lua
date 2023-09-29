@@ -9,12 +9,14 @@ RegisterNetEvent('xt-mechinfo:client:Menu', function(VEH)
     local temp, tempType = xTc.GetVehTemp(VEH)
 
     xTc.Emote('tablet2')
-    QBCore.Functions.Progressbar('scan_vehicle', 'Scanning Vehicle...', (Config.ScanVehicleLength * 1000), false, true, { -- Name | Label | Time | useWhileDead | canCancel
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {}, {}, {}, function()
+    if lib.progressCircle({
+        label = 'Scanning Vehicle...',
+        duration = (Config.ScanVehicleLength * 1000),
+        position = 'bottom',
+        useWhileDead = false,
+        canCancel = true,
+        disable = { car = true },
+    }) then
         xTc.Emote('tablet')
         lib.registerContext({
             id = 'vehicle_status',
@@ -58,8 +60,7 @@ RegisterNetEvent('xt-mechinfo:client:Menu', function(VEH)
             }
         })
         lib.showContext('vehicle_status')
-    end, function()
+    else
         xTc.EndEmote()
-        QBCore.Functions.Notify('Canceled...', 'error')
-    end)
+    end
 end)
