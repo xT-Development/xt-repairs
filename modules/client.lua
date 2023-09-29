@@ -75,6 +75,7 @@ function xTc.RepairMenu(ID)
 
     local vehicle = GetVehiclePedIsIn(cache.ped)
     local isOwned = Config.Locations[ID].business.isOwned
+    local mechanicThreshold = Config.Locations[ID].maxMechanics
     local mechanics
 
     if isOwned then
@@ -83,7 +84,7 @@ function xTc.RepairMenu(ID)
     else
         mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, Config.DefaultMechJob)
     end
-    if mechanics > Config.MinimumMechanics then return QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error') end
+    if mechanics >= mechanicThreshold then return QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error') end
 
     lib.registerContext({
         id = 'repair_menu',
@@ -136,12 +137,14 @@ function xTc.Repair(ID, TYPE)
         TriggerServerEvent('xt-repairs:server:setBusyState', ID, true)
         FreezeEntityPosition(vehicle, true)
         TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 5.0, 'airwrench', 0.05)
-        QBCore.Functions.Progressbar('repair_vehicle', 'Repairing Vehicle...', (Config.Locations[ID].repairTimes[TYPE] * 1000), false, true, {
-            disableMovement = true,
-            disableCarMovement = true,
-            disableMouse = false,
-            disableCombat = true,
-        }, {}, {}, {}, function()
+        if lib.progressCircle({
+            label = 'Repairing Vehicle...',
+            duration = (Config.Locations[ID].repairTimes[TYPE] * 1000),
+            position = 'bottom',
+            useWhileDead = false,
+            canCancel = false,
+            disable = { car = true },
+        }) then
             if TYPE == 'externals' then
                 SetVehicleBodyHealth(vehicle, 1000.0)
                 SetVehicleFixed(vehicle)
@@ -157,10 +160,9 @@ function xTc.Repair(ID, TYPE)
             TriggerServerEvent('xt-repairs:server:setBusyState', ID, false)
             exports[Config.Fuel]:SetFuel(vehicle, getFuel)
             FreezeEntityPosition(vehicle, false)
-        end, function()
+        else
             FreezeEntityPosition(vehicle, false)
-            QBCore.Functions.Notify('Canceled...', 'error', 3000)
-        end)
+        end
     end
 end
 

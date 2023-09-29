@@ -4,20 +4,20 @@ Config = {}
 Config.Debug = true
 
 -- General Configs --
-Config.Fuel = 'cdn-fuel' -- Fuel resource
-Config.MinimumMechanics = 0 -- If Mechanic count is over this, required to contact mechanic
-Config.RenewedBanking = true -- Renewed Banking (If false, uses qb-management)
-Config.DefaultMechJob = 'mechanic' -- Default job check for locations that are not owned
-Config.XTSlashTires = false -- Enable if using xt-slashtires (Requires exports to sync the tires properly)
+Config.Fuel = 'cdn-fuel'                    -- Fuel resource
+Config.RenewedBanking = true                -- Renewed Banking (If false, uses qb-management)
+Config.DefaultMechJob = 'mechanic'          -- Default job check for locations that are not owned
+Config.XTSlashTires = false                 -- Enable if using xt-slashtires (Requires exports to sync the tires properly)
 
 -- Vehicle Status Menu Config --
-Config.Fahrenheit = true -- Use farenheit for engine temp
-Config.MechanicJobs = { 'mechanic' } -- Used for vehicle status menu
-Config.ScanVehicleLength = 5 -- Seconds it takes to scan the vehicle
+Config.Fahrenheit = true                    -- Use farenheit for engine temp
+Config.MechanicJobs = { 'mechanic' }        -- Used for vehicle status menu
+Config.ScanVehicleLength = 5                -- Seconds it takes to scan the vehicle
 
 -- Zone Configs --
 Config.Locations = {
     { -- Bennys
+        maxMechanics = 1, -- If mechanic count is over this, required to contact mechanic
         point = { coords = vec3(-211.74, -1323.82, 30.89), radius = 8 },
         cost = { -- Price of Repairs
             ['internals'] = 500,
@@ -36,6 +36,7 @@ Config.Locations = {
         isBusy = false -- Dont fuck with this
     },
     { -- Paleto
+        maxMechanics = 0, -- If mechanic count is over this, required to contact mechanic
         point = { coords = vec3(108.16316986084, 6623.857421875, 31.787296295166), radius = 8 },
         cost = { -- Price of Repairs
             ['internals'] = 500,
