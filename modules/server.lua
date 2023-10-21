@@ -5,9 +5,9 @@ function xTs.CalcCost(ID, TYPE)
     local mechCount = 0
 
     if owned then
-        mechCount = QBCore.Functions.GetDutyCount(Config.Locations[ID].business.job)
+        mechCount = xTs.getJobCount(Config.Locations[ID].business.job)
     else
-        mechCount = QBCore.Functions.GetDutyCount('mechanic')
+        mechCount = xTs.getJobCount('mechanic')
     end
 
     local base = Config.Locations[ID].cost[TYPE]
@@ -25,6 +25,17 @@ function xTs.BusyState(ID, BOOL)
     local dist = #(repairCoords - pCoords)
     if dist > Config.Locations[ID].point.radius then return end
     Config.Locations[ID].isBusy = BOOL
+end
+
+function xTs.getJobCount(JOB)
+    local count = 0
+    for _, source in pairs(GetPlayers()) do
+        local hasGroup = Bridge.hasGroup(source, JOB)
+        if hasGroup then
+            count += 1
+        end
+    end
+    return count
 end
 
 return xTs

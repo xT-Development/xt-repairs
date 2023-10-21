@@ -5,9 +5,12 @@ Config.Debug = true
 
 -- General Configs --
 Config.Fuel = 'cdn-fuel'                    -- Fuel resource
-Config.RenewedBanking = true                -- Renewed Banking (If false, uses qb-management)
 Config.DefaultMechJob = 'mechanic'          -- Default job check for locations that are not owned
 Config.XTSlashTires = false                 -- Enable if using xt-slashtires (Requires exports to sync the tires properly)
+
+function Config.Emote(emote)                -- Add your own event/export for emotes
+    exports.scully_emotemenu:playEmoteByCommand(emote)
+end
 
 -- Vehicle Status Menu Config --
 Config.Fahrenheit = true                    -- Use farenheit for engine temp
@@ -58,4 +61,4 @@ Config.Locations = {
 
 ----------------------------------------------
 
-QBCore = exports['qb-core']:GetCoreObject()
+Bridge = exports['Renewed-Lib']:getLib()

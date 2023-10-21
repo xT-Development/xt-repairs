@@ -1,4 +1,4 @@
-local xTc = require('modules.client')
+local xTc = require 'modules.client'
 local RepairPoints = {}
 local shown = false
 local Blips = {}
@@ -79,6 +79,6 @@ end
 
 -- Resource / Player Stuff --
 AddEventHandler('onResourceStart', function(resource) if resource == GetCurrentResourceName() then playerLoad() end end)
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function() playerLoad() end)
 AddEventHandler('onResourceStop', function(resource) if resource == GetCurrentResourceName() then playerUnload() end end)
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function() playerUnload() end)
+AddEventHandler('Renewed-Lib:client:PlayerLoaded', function() playerLoad() end)
+AddEventHandler('Renewed-Lib:client:PlayerUnloaded', function() playerUnload() end)

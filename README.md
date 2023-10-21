@@ -7,11 +7,12 @@
 
 
 # Features:
+- QB / OX / ESX Support
 - ox_lib points
 - Repair vehicle body, engine, or all
    - Separate price per repair type and location
 - Locations can be owned (Business receives funds)
-   - Renewed-Baking or qb-management
+   - Using Renewed-Baking
 - Minimum mechanic count required to use bays
    - Job checks for owned locations
 - Cost mulipliers if mechanics are on duty and the bays are used
@@ -20,9 +21,9 @@
 - Busy states for each location (Location can't be used when it's busy)
 
 # Dependencies:
-- [qb-core](https://github.com/qbcore-framework/qb-core)
 - [ox_lib](https://github.com/overextended/ox_lib/releases)
-- [Renewed-Banking](https://github.com/Renewed-Scripts/Renewed-Banking) OR [qb-management](https://github.com/Renewed-Scripts/Renewed-Banking)
+- [Renewed-Lib](https://github.com/Renewed-Scripts/Renewed-Lib)
+- [Renewed-Banking](https://github.com/Renewed-Scripts/Renewed-Banking)
 - Optional: [xt-slashtires](https://xtdev.tebex.io/package/5872186)
 
 # Preview:

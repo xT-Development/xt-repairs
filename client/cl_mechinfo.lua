@@ -8,7 +8,7 @@ RegisterNetEvent('xt-mechinfo:client:Menu', function(VEH)
     local wheelsInfo = xTc.GetVehicleWheels(VEH)
     local temp, tempType = xTc.GetVehTemp(VEH)
 
-    xTc.Emote('tablet2')
+    Config.Emote('tablet2')
     if lib.progressCircle({
         label = 'Scanning Vehicle...',
         duration = (Config.ScanVehicleLength * 1000),
@@ -17,11 +17,11 @@ RegisterNetEvent('xt-mechinfo:client:Menu', function(VEH)
         canCancel = true,
         disable = { car = true },
     }) then
-        xTc.Emote('tablet')
+        Config.Emote('tablet')
         lib.registerContext({
             id = 'vehicle_status',
             title = 'Vehicle Status',
-            onExit = function() xTc.EndEmote() end,
+            onExit = function() ClearPedTasks(cache.ped) end,
             options = {
                 {
                     title = 'Engine Temp: '..temp..tempType,
@@ -61,6 +61,6 @@ RegisterNetEvent('xt-mechinfo:client:Menu', function(VEH)
         })
         lib.showContext('vehicle_status')
     else
-        xTc.EndEmote()
+        ClearPedTasks(cache.ped)
     end
 end)

@@ -1,5 +1,3 @@
-local scully = GetResourceState('scully_emotemenu')
-local rpemotes = GetResourceState('rpemotes')
 local Wheels = {
     ['4'] = {
         { id = 0, name = 'Driver Front'},
@@ -18,26 +16,6 @@ local Wheels = {
 }
 
 local xTc = {}
-
--- Play Emote --
-function xTc.Emote(emote)
-    if scully == 'started' then
-        exports.scully_emotemenu:playEmoteByCommand(emote)
-    end
-    if rpemotes == 'started' then
-        TriggerEvent('animations:client:EmoteCommandStart', {emote})
-    end
-end
-
--- End Emote --
-function xTc.EndEmote()
-    if scully == 'started' then
-        exports.scully_emotemenu:cancelEmote()
-    end
-    if rpemotes == 'started' then
-        TriggerEvent('animations:client:EmoteCommandStart', {'c'})
-    end
-end
 
 function xTc.IsPedDriving()
     local ped = cache.ped
@@ -68,10 +46,10 @@ end
 
 function xTc.RepairMenu(ID)
     local isBusy = lib.callback.await('xt-repairs:server:GetBusyState', false, ID)
-    if isBusy then return QBCore.Functions.Notify('This repair bay is being used!', 'error') end
+    if isBusy then return lib.notify({ title = 'This repair bay is being used!', type = 'error' }) end
 
     local vehicleCheck = xTc.CheckVehicle(ID)
-    if not vehicleCheck then return QBCore.Functions.Notify('You can\'t repair this vehicle class at this location!', 'error') end
+    if not vehicleCheck then return lib.notify({ title = 'You can\'t repair this vehicle class at this location!', type = 'error' }) end
 
     local vehicle = GetVehiclePedIsIn(cache.ped)
     local isOwned = Config.Locations[ID].business.isOwned
@@ -84,7 +62,7 @@ function xTc.RepairMenu(ID)
     else
         mechanics = lib.callback.await('xt-repairs:server:GetJobCount', false, Config.DefaultMechJob)
     end
-    if mechanics >= mechanicThreshold then return QBCore.Functions.Notify('There is mechanics on duty at this location!', 'error') end
+    if mechanics >= mechanicThreshold then return lib.notify({ title = 'There is mechanics available at this location!', type = 'error' }) end
 
     lib.registerContext({
         id = 'repair_menu',
@@ -96,7 +74,7 @@ function xTc.RepairMenu(ID)
                 onSelect = function()
                     local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'internals')
                     local engine = GetVehicleEngineHealth(vehicle)
-                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
+                    if engine >= 1000.0 then lib.notify({ title = 'Vehicle engine is not damaged!', type = 'error' }) return end
                     if hasFunds then xTc.Repair(ID, 'internals') end
                 end
             },
@@ -106,7 +84,7 @@ function xTc.RepairMenu(ID)
                 onSelect = function()
                     local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'externals')
                     local body = GetVehicleBodyHealth(vehicle)
-                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
+                    if body >= 1000.0 then lib.notify({ title = 'Vehicle body is not damaged!', type = 'error' }) return end
                     if hasFunds then xTc.Repair(ID, 'externals') end
                 end
             },
@@ -117,8 +95,8 @@ function xTc.RepairMenu(ID)
                     local hasFunds = lib.callback.await('xt-repairs:server:HasFunds', false, ID, 'all')
                     local body = GetVehicleBodyHealth(vehicle)
                     local engine = GetVehicleEngineHealth(vehicle)
-                    if body >= 1000.0 then QBCore.Functions.Notify('Vehicle body is not damaged!', 'error') return end
-                    if engine >= 1000.0 then QBCore.Functions.Notify('Vehicle engine is not damaged!', 'error') return end
+                    if body >= 1000.0 then lib.notify({ title = 'Vehicle body is not damaged!', type = 'error' }) return end
+                    if engine >= 1000.0 then lib.notify({ title = 'Vehicle engine is not damaged!', type = 'error' }) return end
                     if hasFunds then xTc.Repair(ID, 'all') end
                 end
             },
