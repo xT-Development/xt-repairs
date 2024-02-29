@@ -1,47 +1,96 @@
-local Utils = require('modules.shared')
-local xTs = require('modules.server')
+local config = require 'configs.shared'
+repairBays = {}
 
 -- Toggle Busy State --
-RegisterNetEvent('xt-repairs:server:setBusyState', function(ID, BOOL) xTs.BusyState(ID, BOOL) end)
-
--- Get Couunt of Mechanics --
-lib.callback.register('xt-repairs:server:GetJobCount', function(source, JOB) return xTs.getJobCount(JOB) end)
-
--- Get Busy State --
-lib.callback.register('xt-repairs:server:GetBusyState', function(source, ID) return Config.Locations[ID].isBusy end)
-
--- Check if Player has Funds --
-lib.callback.register('xt-repairs:server:HasFunds', function(source, ID, TYPE)
+lib.callback.register('xt-repairs:server:setBusyState', function(source, id, state)
     local src = source
-    local money = Bridge.getMoney(src, 'bank')
-    local callback = false
-    local total = Config.Locations[ID].cost[TYPE]
+    local dist = distanceCheck(src, id)
+    if not dist then return end
 
-    if money >= total then
-        callback = true
-    else
-        lib.notify({ title = 'You don\'t have enough funds for the repair!', type = 'error' })
+    local setState = state
+    if state then
+        setState = src
     end
-    return callback
+
+    return setBusyState(id, setState)
 end)
 
--- Check if Player has Paid --
-lib.callback.register('xt-repairs:server:HasPaid', function(source, ID, TYPE)
-    local src = source
-    local callback = false
-    local isOwned = Config.Locations[ID].business.isOwned
-    local cost = xTs.CalcCost(ID, TYPE)
+-- Gets Bay State --
+lib.callback.register('xt-repairs:server:getRepairBayState', function(source, id)
+    return repairBays[id]
+end)
 
-    if isOwned then
-        if Bridge.removeMoney(src, cost, 'bank', 'vehicle-repair') then
-            exports['Renewed-Banking']:addAccountMoney(Config.Locations[ID].business.job, cost)
-            callback = true
+-- Get Couunt of Mechanics --
+lib.callback.register('xt-repairs:server:getJobCount', function(source, id)
+    local playerJob = getPlayerJob(tonumber(source))
+    local locationInfo = config.Locations[id]
+    local job = locationInfo.business.isOwned and locationInfo.business.job or config.DefaultMechJob
+    local hasAllowedJob = (playerJob == job)
+
+    if hasAllowedJob then -- Returns early if allowed
+        return 1, hasAllowedJob
+    end
+
+    return getJobCount(job), hasAllowedJob
+end)
+
+-- Check if Source has Funds --
+lib.callback.register('xt-repairs:server:takePayment', function(source, id, type, target)
+
+    if (target ~= nil) then
+        local dist = distanceCheckFromPlayer(source, target)
+        if not dist then return end
+    end
+
+    local src = (target ~= nil) and target or source
+    local money = getMoney(src, 'bank')
+    local total = config.Locations[id].cost[type]
+    local hasFunds = false
+    local hasPaid = false
+
+    if money >= total then
+        local isOwned = config.Locations[id].business.isOwned
+        local cost = calculateCost(id, type)
+
+        hasFunds = true
+
+        if isOwned then
+            if removeMoney(src, cost, 'bank', 'vehicle-repair') then
+                exports['Renewed-Banking']:addAccountMoney(config.Locations[id].business.job, cost)
+                hasPaid = true
+            end
+        else
+            if removeMoney(src, cost, 'bank', 'vehicle-repair') then
+                hasPaid = true
+            end
         end
     else
-        if Bridge.removeMoney(src, cost, 'bank', 'vehicle-repair') then
-            callback = true
+        lib.notify(src, { title = 'You don\'t have enough funds for the repair!', type = 'error' })
+    end
+
+    return hasFunds, hasPaid
+end)
+
+-- Gets Repair Total --
+lib.callback.register('xt-repairs:server:getRepairCost', function(source, id, type)
+    return calculateCost(id, type)
+end)
+
+-- Handlers --
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    repairBays = {}
+    for x = 1, #config.Locations do
+        setBusyState(x, false)
+    end
+end)
+
+AddEventHandler('playerDropped', function()
+    local src = source
+    for x = 1, #repairBays do
+        if repairBays[x] == src then
+            setBusyState(x, false)
+            break
         end
     end
-    Utils.Debug('vehicle Repair', 'Paid: '..cost..' | Type: '..TYPE)
-    return callback
 end)
