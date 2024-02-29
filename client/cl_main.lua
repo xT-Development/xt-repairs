@@ -1,17 +1,18 @@
-local xTc = require 'modules.client'
-local RepairPoints = {}
+local config = require 'configs.shared'
+local clConfig = require 'configs.client'
+local repairPoints = {}
 local shown = false
-local Blips = {}
+local repairBlips = {}
 
 local lib = lib
 local IsControlJustReleased = IsControlJustReleased
 
-local function SetupRepairPoints()
-    for x = 1, #Config.Locations do
-        local Info = Config.Locations[x]
-        if not DoesBlipExist(Blips[x]) and Config.Locations[x].blip.enable then
-            local blipInfo = Config.Locations[x].blip
-            Blips[x] = xTc.Blip(blipInfo.text, Info.point.coords, blipInfo.sprite, blipInfo.scale, blipInfo.color)
+local function setupRepairs()
+    for x = 1, #config.Locations do
+        local Info = config.Locations[x]
+        if not DoesBlipExist(repairBlips[x]) and config.Locations[x].blip.enable then
+            local blipInfo = config.Locations[x].blip
+            repairBlips[x] = createRepairsBlip(blipInfo.text, Info.point.coords, blipInfo.sprite, blipInfo.scale, blipInfo.color)
         end
 
         local RepairZone = lib.points.new({
@@ -27,7 +28,7 @@ local function SetupRepairPoints()
         end
 
         function RepairZone:nearby()
-            if not xTc.IsPedDriving() then
+            if not isPlayerDriving() then
                 if shown then
                     lib.hideTextUI()
                     shown = false
@@ -44,7 +45,9 @@ local function SetupRepairPoints()
                     shown = true
                 end
 
-                if IsControlJustReleased(0, 38) then xTc.RepairMenu(x) end
+                if IsControlJustReleased(0, 38) then
+                    openRepairMenu(x)
+                end
             else
                 if shown then
                     lib.hideTextUI()
@@ -52,33 +55,40 @@ local function SetupRepairPoints()
                 end
             end
         end
-        RepairPoints[#RepairPoints+1] = RepairZone
+        repairPoints[#repairPoints+1] = RepairZone
     end
+    globalMechInfo()
 end
 
-local function CleanupRepairs()
-    for x = 1, #Config.Locations do
-        if DoesBlipExist(Blips[x]) and Config.Locations[x].blip.enable then
-            RemoveBlip(Blips[x])
+local function cleanupRepairs()
+    for x = 1, #config.Locations do
+        if DoesBlipExist(repairBlips[x]) and config.Locations[x].blip.enable then
+            RemoveBlip(repairBlips[x])
         end
     end
-    for x = 1, #RepairPoints do
-        RepairPoints[x]:remove()
+    for x = 1, #repairPoints do
+        repairPoints[x]:remove()
     end
+    exports.ox_target:removeGlobalVehicle('mechInfo')
 end
 
-local function playerLoad()
-    xTc.GlobalMechInfo()
-    SetupRepairPoints()
-end
+-- Handlers --
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+        setupRepairs()
+    end
+end)
 
-local function playerUnload()
-    xTc.RemoveGlobalMechInfo()
-    CleanupRepairs()
-end
+AddEventHandler('onResourceStop', function(resource)
+    if resource == GetCurrentResourceName() then
+        cleanupRepairs()
+    end
+end)
 
--- Resource / Player Stuff --
-AddEventHandler('onResourceStart', function(resource) if resource == GetCurrentResourceName() then playerLoad() end end)
-AddEventHandler('onResourceStop', function(resource) if resource == GetCurrentResourceName() then playerUnload() end end)
-AddEventHandler('Renewed-Lib:client:PlayerLoaded', function() playerLoad() end)
-AddEventHandler('Renewed-Lib:client:PlayerUnloaded', function() playerUnload() end)
+AddEventHandler('xt-repairs:client:onLoad', function()
+    setupRepairs()
+end)
+
+AddEventHandler('xt-repairs:client:onUnload', function()
+    cleanupRepairs()
+end)
