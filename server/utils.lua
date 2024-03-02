@@ -40,7 +40,7 @@ function calculateCost(id, type)
     end
 
     if getPlayerJob(src) ~= mechJob then
-        mechCount = getJobCount(mechJob)
+        mechCount = getJobCount(mechJob) -- Upcharges if "customer" does not have the job for the repair bay
     end
 
     local base = config.Locations[id].cost[type]

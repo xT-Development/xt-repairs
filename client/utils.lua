@@ -1,5 +1,5 @@
-local config = require 'configs.shared'
-local clConfig = require 'configs.client'
+local config =      require 'configs.shared'
+local clConfig =    require 'configs.client'
 
 local Wheels = {
     ['4'] = {
