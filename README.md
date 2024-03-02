@@ -11,8 +11,9 @@
 - ox_lib points
 - Repair vehicle body, engine, or all
    - Separate price per repair type and location
-- Locations can be owned (Business receives funds)
-   - Using Renewed-Banking
+- Locations can be owned
+   - Business receives funds
+   - Setup exports/events in server config
 - Minimum mechanic count required to use bays
    - Job checks for owned locations
    - Players with the required job can perform repairs for other players and send them the bill
@@ -20,13 +21,13 @@
 - Vehicle class checks for each location
 - Enable / Disable blip per location
 - Busy states for each location (Repair bay can't be used when it's busy)
+- QB/QBX/ESX/OX/ND Bridge
 
 # [Docs](https://xtdev.gitbook.io/xt-docs/free-resources/repairs)
 
 # Dependencies:
 - [ox_lib](https://github.com/overextended/ox_lib/releases)
 - [ox_target](https://github.com/overextended/ox_target/releases)
-- [Renewed-Banking](https://github.com/Renewed-Scripts/Renewed-Banking)
 - Optional: [xt-slashtires](https://xtdev.tebex.io/package/5872186)
 
 # Preview:
