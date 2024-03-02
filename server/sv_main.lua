@@ -1,4 +1,5 @@
-local config = require 'configs.shared'
+local config =      require 'configs.shared'
+local svConfig =    require 'configs.server'
 repairBays = {}
 
 -- Toggle Busy State --
@@ -56,7 +57,7 @@ lib.callback.register('xt-repairs:server:takePayment', function(source, id, type
 
         if isOwned then
             if removeMoney(src, cost, 'bank', 'vehicle-repair') then
-                exports['Renewed-Banking']:addAccountMoney(config.Locations[id].business.job, cost)
+                svConfig.addBusinessFunds(config.Locations[id].business.job, cost)
                 hasPaid = true
             end
         else
