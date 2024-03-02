@@ -21,25 +21,25 @@ function getPlayerJob(src)
     return Player.job.name, Player.job.grade
 end
 
-function getMoney(src, type)
+function getMoney(src, mtype)
     local Player = getPlayer(src)
     if not Player then return end
-    type = convertMoney[type] or type
-    return Player.getAccount(type).money
+    mtype = convertMoney[mtype] or mtype
+    return Player.getAccount(mtype).money
 end
 
-function removeMoney(src, amount, type, reason)
-    local type = convertMoney[type] or type
+function removeMoney(src, amount, mtype, reason)
+    local mtype = convertMoney[mtype] or mtype
 
     local Player = getPlayer(src)
     if not Player then
         return false
     end
 
-    if Player.getAccount(type).money < amount then
+    if Player.getAccount(mtype).money < amount then
         return false
     end
 
-    Player.removeAccountMoney(type, amount, reason)
+    Player.removeAccountMoney(mtype, amount, reason)
     return true
 end

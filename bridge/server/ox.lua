@@ -19,16 +19,16 @@ function getPlayerJob(src)
     return player.getGroup()
 end
 
-function getMoney(src, type)
-    if type == 'cash' then
+function getMoney(src, mtype)
+    if mtype == 'cash' then
         return exports.ox_inventory:GetItemCount(src, 'money')
     else
         return
     end
 end
 
-function removeMoney(src, amount, type, reason)
-    if type == 'cash' then
+function removeMoney(src, amount, mtype, reason)
+    if mtype == 'cash' then
         return exports.ox_inventory:RemoveItem(src, 'money', amount)
     else
         return

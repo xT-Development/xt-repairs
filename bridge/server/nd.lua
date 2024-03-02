@@ -18,19 +18,19 @@ function getPlayerJob(src)
     return Player.getJob()
 end
 
-function getMoney(src, type)
+function getMoney(src, mtype)
     local Player = getPlayer(src)
     if not Player then return end
-    return Player[type]
+    return Player[mtype]
 end
 
-function removeMoney(src, amount, type, reason)
+function removeMoney(src, amount, mtype, reason)
     local Player = getPlayer(src)
     if not Player then return end
 
-    if Player[type] < amount then
+    if Player[mtype] < amount then
         return
     end
 
-    return Player.deductMoney(type, amount, reason or "unknown")
+    return Player.deductMoney(mtype, amount, reason or "unknown")
 end
