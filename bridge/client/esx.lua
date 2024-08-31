@@ -1,9 +1,9 @@
 if GetResourceState('es_extended') ~= 'started' then return end
 
-AddEventHandler('esx:playerLoaded', function()
+RegisterNetEvent('esx:playerLoaded', function()
     TriggerEvent('xt-repairs:client:onLoad')
 end)
 
-AddEventHandler('esx:onPlayerLogout', function()
+RegisterNetEvent('esx:onPlayerLogout', function()
     TriggerEvent('xt-repairs:client:onUnload')
 end)
